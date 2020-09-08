@@ -8,21 +8,21 @@ import normalize from './normalizeText';
 const styles = {
   placeholderText: {
     color: '#c9c9c9',
-    fontSize: normalize(18)
+    fontSize: normalize(18),
   },
   contentInput: {
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   contentText: {
-    fontSize: normalize(18)
+    fontSize: normalize(18),
   },
   stylish: {
     height: 48,
     borderColor: '#bdbdbd',
     borderWidth: 2,
-    borderRadius: 32
-  }
+    borderRadius: 32,
+  },
 };
 export default class ComposePicker extends Component {
   constructor(props) {
@@ -32,24 +32,25 @@ export default class ComposePicker extends Component {
       allowPointerEvents: true,
       showContent: false,
       selected: '',
-      startDate: null,
-      endDate: null,
+      startDate: this.props.startDate || null,
+      endDate: this.props.endDate || null,
       date: new Date(),
       focus: 'startDate',
       currentDate: moment(),
-      textStartDate: 'Start Date',
-      textEndDate: 'End Date'
     };
   }
-  isDateBlocked = date => {
+  isDateBlocked = (date) => {
     if (this.props.blockBefore) {
       return date.isBefore(moment(), 'day');
     } else if (this.props.blockAfter) {
-      return date.isAfter(moment(), 'day');
+      return !date.isBetween(
+        new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+        new Date(),
+      );
     }
     return false;
   };
-  onDatesChange = event => {
+  onDatesChange = (event) => {
     const { startDate, endDate, focusedInput, currentDate } = event;
     if (currentDate) {
       this.setState({ currentDate });
@@ -59,7 +60,7 @@ export default class ComposePicker extends Component {
       this.setState({ ...this.state, startDate, endDate });
     });
   };
-  setModalVisible = visible => {
+  setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
   onConfirm = () => {
@@ -68,12 +69,12 @@ export default class ComposePicker extends Component {
     if (!this.props.mode || this.props.mode === 'single') {
       this.setState({
         showContent: true,
-        selected: this.state.currentDate.format(outFormat)
+        selected: this.state.currentDate.format(outFormat),
       });
       this.setModalVisible(false);
       if (typeof this.props.onConfirm === 'function') {
         this.props.onConfirm({
-          currentDate: this.state.currentDate.format(returnFormat)
+          currentDate: this.state.currentDate.format(returnFormat),
         });
       }
       return;
@@ -84,14 +85,14 @@ export default class ComposePicker extends Component {
       const end = this.state.endDate.format(outFormat);
       this.setState({
         showContent: true,
-        selected: `${start} ${this.props.dateSplitter} ${end}`
+        selected: `${start} ${this.props.dateSplitter} ${end}`,
       });
       this.setModalVisible(false);
 
       if (typeof this.props.onConfirm === 'function') {
         this.props.onConfirm({
           startDate: this.state.startDate.format(returnFormat),
-          endDate: this.state.endDate.format(returnFormat)
+          endDate: this.state.endDate.format(returnFormat),
         });
       }
     } else {
@@ -133,7 +134,7 @@ export default class ComposePicker extends Component {
         onPress={this.onConfirm}
         style={[
           { width: '80%', marginHorizontal: '3%' },
-          this.props.ButtonStyle
+          this.props.ButtonStyle,
         ]}
       >
         <Text style={[{ fontSize: 20 }, this.props.ButtonTextStyle]}>
@@ -158,7 +159,7 @@ export default class ComposePicker extends Component {
         }}
         style={[
           { width: '100%', height: '100%', justifyContent: 'center' },
-          style
+          style,
         ]}
       >
         <View>
@@ -188,8 +189,6 @@ export default class ComposePicker extends Component {
                   selectedTextColor={this.props.selectedTextColor || undefined}
                   mode={this.props.mode || 'single'}
                   currentDate={this.state.currentDate}
-                  textStartDate={this.state.textStartDate}
-                  textEndDate={this.state.textEndDate}
                 />
               </View>
               <View
@@ -199,7 +198,7 @@ export default class ComposePicker extends Component {
                   height: '10%',
                   flexDirection: 'row',
                   justifyContent: 'center',
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}
               >
                 {this.renderButton()}
@@ -213,7 +212,7 @@ export default class ComposePicker extends Component {
 }
 
 ComposePicker.propTypes = {
-  dateSplitter: PropTypes.string
+  dateSplitter: PropTypes.string,
 };
 
 ComposePicker.defaultProps = { dateSplitter: '->' };
