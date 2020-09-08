@@ -1,6 +1,5 @@
-
 {
-  "name": "react-native-date-ranges",
+  "name": "@cloudgakkai/react-native-date-ranges",
   "version": "2.5.0",
   "description": "",
   "main": "index.js",
